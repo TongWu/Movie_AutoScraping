@@ -1,6 +1,6 @@
 # Movie_AutoScraping
 
-This is a program that can helps to finish the work after you download the movie to the folder (including the cloud folder mounted by rclone).
+This is a program that can helps to finish the work after downloading the movie to the folder (including the cloud folder mounted by rclone).
 
 The program will do:
 
