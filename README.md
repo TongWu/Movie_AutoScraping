@@ -6,10 +6,10 @@ The program will do:
 
 1. Delete the file under 500Mb
 2. Tidy the movie filename (only -C postfix is supported, more on the way…)
-   - Delete the prefix, e.g., 232GANA-334-C.mp4 -> GANA-334-C.mp4
-   - Delete [advertisement], e.g., [233.com]SSNI-334-C.mp4 -> SSNI-334-C.mp4
-   - Add ‘-’, e.g., SSNI334C.mp4 -> SSNI-334-C.mp4
-   - Add "-C" if it is not exist, e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
+   - Delete the number prefix before the characters
+   - Delete [advertisement]
+   - Add ‘-’ between characters and numbers
+   - Add "-C" if it is not exist
 3. Call the [Movie_Data_Capture](https://github.com/yoshiko2/Movie_Data_Capture) program to scrape the metadata and put them on the right place
 
 ## Quick start
