@@ -11,6 +11,10 @@ The program will do:
    - Add ‘-’ between characters and numbers
    - Add "-C" if it is not exist
 3. Call the [Movie_Data_Capture](https://github.com/yoshiko2/Movie_Data_Capture) program to scrape the metadata and put them on the right place
+4. Delete the duplicate file, low resolution in piority
+5. GUI for demaon keepliving and config editing (ongoing)
+6. Configuration validating and testing (ongoing)
+7. Watch modification of the specific folder, run the program periodically (ongoing)
 
 ## Quick start
 
