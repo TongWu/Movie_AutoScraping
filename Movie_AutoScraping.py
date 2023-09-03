@@ -3,6 +3,9 @@ import re
 import sys
 import time
 import datetime
+import argparse
+import subprocess
+import configparser
 
 
 def is_valid_file_size(file_path, size_limit):
@@ -125,6 +128,8 @@ def main(dry_run, folder_path, c, no, u, uc):
 
         max_length = max([len(file) for file in rename_files])
 
+        print("Finished\n\n")
+
         # Print results in the desired order:
         with open(log_file_path, 'a') as log_file:
             print("The following file has NO CHANGE:")
@@ -156,12 +161,6 @@ def main(dry_run, folder_path, c, no, u, uc):
         print("===================================================================================================")
 
 
-
-import argparse
-import subprocess
-import configparser
-
-
 def modify_config(c, f, o):
     config = configparser.ConfigParser()
 
@@ -190,9 +189,9 @@ if __name__ == "__main__":
     parser.add_argument('-u', '--hack', action='store_true', help='Scrape all movies default with hacked')
     parser.add_argument('-uc', '--hack_sub', action='store_true', help='Scrape all movies default with hacked AND '
                                                                        'subtitle')
-
+    """ Step 1: Fetch arguments and initialise """
+    print("Initialising...")
     args = parser.parse_args()
-
     if sum([args.sub, args.no_sub, args.hack, args.hack_sub]) != 1:
         print("Error: You must provide exactly one of the following options: -c, -no, -u, -uc")
         sys.exit()
@@ -218,11 +217,28 @@ if __name__ == "__main__":
     # Check dry run
     dry_run = args.dryrun
     if dry_run:
+        print(
+            "=========================================================================================================="
+        )
         print("DRY RUN, will not affect the file")
+        print(
+            "=========================================================================================================="
+        )
     else:
-        print("The program will modify these files:")
+        print(
+            "=========================================================================================================="
+        )
+        print("The program will make affect on modifications and/or deletions")
+        print(
+            "=========================================================================================================="
+        )
 
+    """ Step 1 Finished """
+    print("\n\nFinished\n\n")
+
+    """ Step 2: Dry run and log """
     # Whatever the dry run option, run dry run first
+    print("Generate file report...\n\n")
     main(True, folder_path, option_c, option_no, option_u, option_uc)
 
     if dry_run:
@@ -235,11 +251,18 @@ if __name__ == "__main__":
             sys.exit()
         main(False, folder_path, option_c, option_no, option_u, option_uc)
 
-    """ Modify the MDC configuration file """
+    print("Finished\n\n")
+
+    """ Step 3: Modify the MDC configuration file """
+    print("Modifying the MDC configuration file...\n\n")
     modify_config(config_path, folder_path, success_output_path)
+    print("Finished\n\n")
 
     """ Run MDC """
+    print("Run MDC\n\n")
     try:
         subprocess.run([mdc_path + 'mdc'], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error while running mdc: {e}")
+
+    print("Finished")
