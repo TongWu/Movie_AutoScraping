@@ -9,7 +9,7 @@ def is_valid_file_size(file_path, size_limit):
     return os.path.getsize(file_path) < size_limit
 
 
-def clean_filename(filename):
+def clean_filename(filename, c, no, u, uc):
     """Clean the file name"""
 
     # Delete number prefix, e.g., 232GANA-334-C.mp4 -> GANA-334-C.mp4
@@ -23,10 +23,32 @@ def clean_filename(filename):
         filename = re.sub(r"([A-Za-z]+)(\d+)(C\.)", r"\1-\2-\3", filename)
     elif re.match(r"[A-Za-z]+\d+-C\.", filename):
         filename = re.sub(r"([A-Za-z]+)(\d+)-C\.", r"\1-\2-C.", filename)
+    elif re.match(r"[A-Za-z]+\d\.", filename):
+        filename = re.sub(r"([A-Za-z]+)(\d+)", r"\1-\2", filename)
 
-    # Add "-C" if it is not exist, e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
-    if not re.search(r"-c\.(?=[^.]+$)", filename, re.I):  # re.I 是大小写不敏感标志
-        filename = re.sub(r"\.(?=[^.]+$)", "-C.", filename)
+    # Delete all characters after the number part
+    filename = re.sub(r"(\d+)-?[^-.]+(?=\.[^.]+$)", r"\1", filename)
+
+    if c:
+        # Add "-C" if it is not exist, e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
+        if not re.search(r"-c\.(?=[^.]+$)", filename, re.I):  # re.I 是大小写不敏感标志
+            filename = re.sub(r"\.(?=[^.]+$)", "-C.", filename)
+    elif no:
+        return filename
+    elif u:
+        # Delete all characters after -u but before .extension
+        # filename = re.sub(r"(-u).*\.", r"\1.", filename, re.I)
+        # Change all -u tag to -hack tag
+        # filename = re.sub(r"-u", "-hack", filename, re.I)
+
+        # Add -hack tag
+        filename = re.sub(r"\.(?=[^.]+$)", "-hack.", filename)
+    elif uc:
+        # Change the possible pattern (-u-c, -c-u, -uc, -cu) to -hack-c
+        # filename = re.sub(r"-(u-c|c-u|uc|cu|hack-c|hackc)(?=\.[^.]+$)", "-hack-c", filename)
+
+        # Add -hack-c tag
+        filename = re.sub(r"\.(?=[^.]+$)", "-hack-c.", filename)
 
     return filename
 
@@ -50,7 +72,7 @@ def countdown(seconds):
     print()
 
 
-def main(dry_run=True, folder_path=""):
+def main(dry_run, folder_path, c, no, u, uc):
     # 500Mb by default
     size_limit = 500 * 1024 * 1024
 
@@ -72,7 +94,7 @@ def main(dry_run=True, folder_path=""):
 
             # Clean the filename
             # TODO: Output a txt file with the log
-            cleaned_filename = clean_filename(file_name)
+            cleaned_filename = clean_filename(file_name, c, no, u, uc)
             if cleaned_filename != file_name:
                 if dry_run:
                     print(f"'{file_name}'\t\t->\t\t'{cleaned_filename}'")
@@ -113,10 +135,24 @@ if __name__ == "__main__":
     parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
     parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
     parser.add_argument('-d', '--dryrun', action='store_true', help='Enable dry run mode')
+    parser.add_argument('-c', '--sub', action='store_true', help='Scrape all movies default with subtitle')
+    parser.add_argument('-no', '--no_sub', action='store_true', help='Scrape all movies default with NO subtitle')
+    parser.add_argument('-u', '--hack', action='store_true', help='Scrape all movies default with hacked')
+    parser.add_argument('-uc', '--hack_sub', action='store_true', help='Scrape all movies default with hacked AND '
+                                                                       'subtitle')
 
     args = parser.parse_args()
 
+    if sum([args.c, args.u, args.uc, args.no]) != 1:
+        print("Error: You must provide exactly one of the following options: -c, -no, -u, -uc")
+        sys.exit()
+
     # Fetch arguments
+    option_c = args.c
+    option_no = args.no
+    option_u = args.u
+    option_uc = args.uc
+
     folder_path = args.source
     success_output_path = args.destination
     mdc_path = args.mdc
@@ -137,7 +173,7 @@ if __name__ == "__main__":
         print("The program will modify these files:")
 
     # Whatever the dry run option, run dry run first
-    main(True, folder_path)
+    main(True, folder_path, option_c, option_no, option_u, option_uc)
 
     if not dry_run:
         try:
@@ -145,7 +181,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("\nOperation interrupted by user, abort.")
             sys.exit()
-        main(False, folder_path)
+        main(False, folder_path, option_c, option_no, option_u, option_uc)
 
     """ Modify the MDC configuration file """
     modify_config(config_path, folder_path, success_output_path)
