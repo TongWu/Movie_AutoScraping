@@ -165,28 +165,11 @@ def main(dry_run, folder_path, c, no, u, uc):
         print("===================================================================================================")
 
 
-def modify_config(c, f, o):
-    mdc_config = configparser.ConfigParser()
-
-    # Read MAS_config.ini
-    mdc_config.read(c + 'MAS_config.ini', encoding='utf-8')
-    if not f.endswith('/'):
-        f += '/'
-    failed_output_folder = f + "failed"
-
-    mdc_config['common']['source_folder'] = f
-    mdc_config['common']['success_output_folder'] = o
-    mdc_config['common']['failed_output_folder'] = failed_output_folder
-
-    with open(c + 'MAS_config.ini', 'w', encoding='utf-8') as config_file:
-        mdc_config.write(config_file)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process video files.')
-    #parser.add_argument('-s', '--source', type=str, required=True, help='Source folder path')
-    #parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
-    #parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
+    # parser.add_argument('-s', '--source', type=str, required=True, help='Source folder path')
+    # parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
+    # parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
     parser.add_argument('-d', '--dryrun', action='store_true', help='Enable dry run mode')
     parser.add_argument('-c', '--sub', action='store_true', help='Scrape all movies default with subtitle')
     parser.add_argument('-no', '--no_sub', action='store_true', help='Scrape all movies default with NO subtitle')
@@ -205,7 +188,7 @@ if __name__ == "__main__":
     config = configparser.ConfigParser()
     config.read('MAS_config.ini', encoding='utf-8')
 
-    mdc_path = config['common']['mdc']
+    mdc_path = config['general']['mdc']
     if not mdc_path.endswith('/'):
         mdc_path += '/'
     mdc_config_path = mdc_path
@@ -267,17 +250,11 @@ if __name__ == "__main__":
 
     print("Finished\n\n")
 
-    """ Step 3: Modify the MDC configuration file """
-    print("Modifying the MDC configuration file...\n\n")
-    modify_config(mdc_config_path, folder_path, success_output_path)
-    print("Finished\n\n")
-
     """ Run MDC """
     print("Run MDC\n\n")
     try:
-        # subprocess.run([mdc_path + 'mdc'], check=True)
-        cmd = Command(mdc_path + 'mdc')
-        cmd()
+        os.system(
+            f"{mdc_path}mdc -C 'common:source_folder={folder_path}' -C 'common:failed_output_folder={folder_path}failed' -C 'common:success_output_folder={success_output_path}' ")
     except subprocess.CalledProcessError as e:
         print(f"Error while running mdc: {e}")
 
