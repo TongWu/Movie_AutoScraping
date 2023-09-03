@@ -273,6 +273,7 @@ if __name__ == "__main__":
 
     """ Run MDC """
     print("Run MDC\n\n")
+    time.sleep(2)
     try:
         subprocess.run([mdc_path + 'mdc'], check=True)
     except subprocess.CalledProcessError as e:
