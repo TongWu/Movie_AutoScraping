@@ -126,7 +126,10 @@ def main(dry_run, folder_path, c, no, u, uc):
         if not os.path.exists(log_folder):
             os.makedirs(log_folder)
 
-        max_length = max([len(file) for file in rename_files])
+        if rename_files:
+            max_length = max([len(file) for file in rename_files])
+        else:
+            max_length = 0
 
         print("Finished\n\n")
 
