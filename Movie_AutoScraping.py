@@ -175,7 +175,9 @@ if __name__ == "__main__":
     # Whatever the dry run option, run dry run first
     main(True, folder_path, option_c, option_no, option_u, option_uc)
 
-    if not dry_run:
+    if dry_run:
+        sys.exit()
+    else:
         try:
             countdown(10)
         except KeyboardInterrupt:
