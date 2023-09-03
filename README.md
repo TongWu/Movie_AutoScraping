@@ -49,24 +49,26 @@ mkdir ~/.config/mdc && ln -s config.ini ~/.config/mdc/
 
 Create a configuration file named `MAS_config.ini` and fill with the following template:
 
-> [general]
-> mdc = ./mdc
->
-> [sub]
-> source = ~/source
-> dest = ~/dest
->
-> [no_sub]
-> source = ~/source2
-> dest = ~/dest2
->
-> [hack_sub]
-> source = ~/source3
-> dest = ~/dest3
->
-> [hack]
-> source = ~/source4
-> dest = ~/dest4
+```ini
+[general]
+mdc = ./mdc
+
+[sub]
+source = ~/source
+dest = ~/dest
+
+[no_sub]
+source = ~/source2
+dest = ~/dest2
+
+[hack_sub]
+source = ~/source3
+dest = ~/dest3
+
+[hack]
+source = ~/source4
+dest = ~/dest4
+```
 
 There are few parameters need to fill:
 
