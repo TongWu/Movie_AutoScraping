@@ -139,7 +139,7 @@ def main(dry_run, folder_path, c, no, u, uc):
             log_file.write("The following file has NO CHANGE:\n")
 
             for file_log in unchanged_files:
-                print("UNCHANGE" + file_log)
+                print("(UNCHANGE) " + file_log)
                 log_file.write(file_log + '\n')
             print("===================================================================================================")
             log_file.write(
@@ -150,7 +150,7 @@ def main(dry_run, folder_path, c, no, u, uc):
 
             for i in range(len(rename_files)):
                 line = f"'{rename_files[i].ljust(max_length)}'\t->\t'{renamed_files[i]}'"
-                print("(RENAME)" + line)
+                print("(RENAME) " + line)
                 log_file.write(line + '\n')
             print("===================================================================================================")
             log_file.write(
@@ -159,7 +159,7 @@ def main(dry_run, folder_path, c, no, u, uc):
             print("The following file will DELETE:")
             log_file.write("The following file will DELETE:\n")
             for file_log in deleted_files:
-                print("(DELETE)" + file_log)
+                print("(DELETE) " + file_log)
                 log_file.write(file_log + '\n')
         print("===================================================================================================")
 
