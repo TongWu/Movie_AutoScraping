@@ -177,8 +177,8 @@ def modify_config(c, f, o):
     mdc_config['common']['success_output_folder'] = o
     mdc_config['common']['failed_output_folder'] = failed_output_folder
 
-    with open('./config.ini', 'w') as configfile:
-        mdc_config.write(configfile)
+    with open(c + 'config.ini', 'w', encoding='utf-8') as config_file:
+        mdc_config.write(config_file)
 
 
 if __name__ == "__main__":
@@ -205,9 +205,9 @@ if __name__ == "__main__":
     config.read('config.ini', encoding='utf-8')
 
     mdc_path = config['common']['mdc']
-    mdc_config_path = mdc_path
     if not mdc_path.endswith('/'):
         mdc_path += '/'
+    mdc_config_path = mdc_path
 
     if args.sub:
         folder_path = config['sub']['source']
