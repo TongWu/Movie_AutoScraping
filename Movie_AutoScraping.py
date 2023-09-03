@@ -203,7 +203,7 @@ if __name__ == "__main__":
 
     # Load the configuration from config.ini
     config = configparser.ConfigParser()
-    config.read('config.ini', encoding='utf-8')
+    config.read('MAS_config.ini', encoding='utf-8')
 
     mdc_path = config['common']['mdc']
     if not mdc_path.endswith('/'):
