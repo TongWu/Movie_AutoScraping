@@ -2,6 +2,7 @@ import os
 import re
 import sys
 import time
+import datetime
 
 
 def is_valid_file_size(file_path, size_limit):
@@ -76,20 +77,25 @@ def main(dry_run, folder_path, c, no, u, uc):
     # 500Mb by default
     size_limit = 500 * 1024 * 1024
 
+    unchanged_files = []
+    rename_files = []
+    renamed_files = []
+    deleted_files = []
+
     for dirpath, dirnames, filenames in os.walk(folder_path):
         for file_name in filenames:
             file_path = os.path.join(dirpath, file_name)
 
-            if not is_video_file(file_name):
-                continue
-
             # Detect size
             if os.path.isfile(file_path) and is_valid_file_size(file_path, size_limit):
                 if dry_run:
-                    print(f"File '{file_name}' will be deleted")
+                    deleted_files.append(f"{file_name}")
                 else:
                     os.remove(file_path)
-                    print(f"Deleted a file less than 500Mb: {file_name}")
+                    print("File '" + f"{file_name}" + "' deleted.")
+                continue
+
+            if not is_video_file(file_name):
                 continue
 
             # Clean the filename
@@ -97,14 +103,58 @@ def main(dry_run, folder_path, c, no, u, uc):
             cleaned_filename = clean_filename(file_name, c, no, u, uc)
             if cleaned_filename != file_name:
                 if dry_run:
-                    print(f"'{file_name}'\t\t->\t\t'{cleaned_filename}'")
+                    rename_files.append(file_name)
+                    renamed_files.append(cleaned_filename)
                 else:
                     new_file_path = os.path.join(dirpath, cleaned_filename)
                     os.rename(file_path, new_file_path)
-                    print(f"File name changed from '{file_name}'\t\tto\t\t'{cleaned_filename}'")
+                    print("Renamed " + file_name + " to " + cleaned_filename)
             else:
                 if dry_run:
-                    print(f"'{file_name}' -> NO CHANGE")
+                    unchanged_files.append(f"{file_name}")
+
+    if dry_run:
+        # Determine the log folder and file name
+        log_folder = os.path.join('./', 'log')
+        current_time = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+        log_file_path = os.path.join(log_folder, f'{current_time}.log')
+
+        # Create the log folder if it doesn't exist
+        if not os.path.exists(log_folder):
+            os.makedirs(log_folder)
+
+        max_length = max([len(file) for file in rename_files])
+
+        # Print results in the desired order:
+        with open(log_file_path, 'a') as log_file:
+            print("The following file has NO CHANGE:")
+            log_file.write("The following file has NO CHANGE:\n")
+
+            for file_log in unchanged_files:
+                print("UNCHANGE" + file_log)
+                log_file.write(file_log + '\n')
+            print("===================================================================================================")
+            log_file.write(
+                "===================================================================================================\n")
+
+            print("The following file will RENAME:")
+            log_file.write("The following file will RENAME:\n")
+
+            for i in range(len(rename_files)):
+                line = f"'{rename_files[i].ljust(max_length)}'\t->\t'{renamed_files[i]}'"
+                print("(RENAME)" + line)
+                log_file.write(line + '\n')
+            print("===================================================================================================")
+            log_file.write(
+                "===================================================================================================\n")
+
+            print("The following file will DELETE:")
+            log_file.write("The following file will DELETE:\n")
+            for file_log in deleted_files:
+                print("(DELETE)" + file_log)
+                log_file.write(file_log + '\n')
+        print("===================================================================================================")
+
 
 
 import argparse
@@ -143,15 +193,15 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if sum([args.c, args.u, args.uc, args.no]) != 1:
+    if sum([args.sub, args.no_sub, args.hack, args.hack_sub]) != 1:
         print("Error: You must provide exactly one of the following options: -c, -no, -u, -uc")
         sys.exit()
 
     # Fetch arguments
-    option_c = args.c
-    option_no = args.no
-    option_u = args.u
-    option_uc = args.uc
+    option_c = args.sub
+    option_no = args.no_sub
+    option_u = args.hack
+    option_uc = args.hack_sub
 
     folder_path = args.source
     success_output_path = args.destination
