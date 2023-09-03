@@ -165,20 +165,20 @@ def main(dry_run, folder_path, c, no, u, uc):
 
 
 def modify_config(c, f, o):
-    config = configparser.ConfigParser()
+    mdc_config = configparser.ConfigParser()
 
     # Read config.ini
-    config.read(c + 'config.ini')
+    mdc_config.read(c + 'config.ini')
     if not f.endswith('/'):
         f += '/'
     failed_output_folder = f + "failed"
 
-    config['common']['source_folder'] = f
-    config['common']['success_output_folder'] = o
-    config['common']['failed_output_folder'] = failed_output_folder
+    mdc_config['common']['source_folder'] = f
+    mdc_config['common']['success_output_folder'] = o
+    mdc_config['common']['failed_output_folder'] = failed_output_folder
 
     with open('./config.ini', 'w') as configfile:
-        config.write(configfile)
+        mdc_config.write(configfile)
 
 
 if __name__ == "__main__":
