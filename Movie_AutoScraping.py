@@ -168,7 +168,7 @@ def modify_config(c, f, o):
     mdc_config = configparser.ConfigParser()
 
     # Read config.ini
-    mdc_config.read(c + 'config.ini')
+    mdc_config.read(c + 'config.ini', encoding='utf-8')
     if not f.endswith('/'):
         f += '/'
     failed_output_folder = f + "failed"
