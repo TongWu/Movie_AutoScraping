@@ -168,7 +168,7 @@ def modify_config(c, f, o):
     config.read(c + 'config.ini')
     if not f.endswith('/'):
         f += '/'
-    failed_output_folder = f + "fail"
+    failed_output_folder = f + "failed"
 
     config['common']['source_folder'] = f
     config['common']['success_output_folder'] = o
