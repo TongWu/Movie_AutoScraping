@@ -180,9 +180,9 @@ def modify_config(c, f, o):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process video files.')
-    parser.add_argument('-s', '--source', type=str, required=True, help='Source folder path')
-    parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
-    parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
+    #parser.add_argument('-s', '--source', type=str, required=True, help='Source folder path')
+    #parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
+    #parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
     parser.add_argument('-d', '--dryrun', action='store_true', help='Enable dry run mode')
     parser.add_argument('-c', '--sub', action='store_true', help='Scrape all movies default with subtitle')
     parser.add_argument('-no', '--no_sub', action='store_true', help='Scrape all movies default with NO subtitle')
@@ -192,22 +192,32 @@ if __name__ == "__main__":
     """ Step 1: Fetch arguments and initialise """
     print("Initialising...")
     args = parser.parse_args()
+
     if sum([args.sub, args.no_sub, args.hack, args.hack_sub]) != 1:
         print("Error: You must provide exactly one of the following options: -c, -no, -u, -uc")
         sys.exit()
 
-    # Fetch arguments
-    option_c = args.sub
-    option_no = args.no_sub
-    option_u = args.hack
-    option_uc = args.hack_sub
+    # Load the configuration from config.ini
+    config = configparser.ConfigParser()
+    config.read('config.ini', encoding='utf-8')
 
-    folder_path = args.source
-    success_output_path = args.destination
-    mdc_path = args.mdc
+    mdc_path = config['common']['mdc']
+    mdc_config_path = mdc_path
     if not mdc_path.endswith('/'):
         mdc_path += '/'
-    config_path = mdc_path
+
+    if args.sub:
+        folder_path = config['sub']['source']
+        success_output_path = config['sub']['dest']
+    elif args.no_sub:
+        folder_path = config['no_sub']['source']
+        success_output_path = config['no_sub']['dest']
+    elif args.hack:
+        folder_path = config['hack']['source']
+        success_output_path = config['hack']['dest']
+    elif args.hack_sub:
+        folder_path = config['hack_sub']['source']
+        success_output_path = config['hack_sub']['dest']
 
     # Check the path existing
     if not os.path.exists(folder_path):
@@ -239,7 +249,7 @@ if __name__ == "__main__":
     """ Step 2: Dry run and log """
     # Whatever the dry run option, run dry run first
     print("Generate file report...\n\n")
-    main(True, folder_path, option_c, option_no, option_u, option_uc)
+    main(True, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
 
     if dry_run:
         sys.exit()
@@ -249,13 +259,13 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("\nOperation interrupted by user, abort.")
             sys.exit()
-        main(False, folder_path, option_c, option_no, option_u, option_uc)
+        main(False, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
 
     print("Finished\n\n")
 
     """ Step 3: Modify the MDC configuration file """
     print("Modifying the MDC configuration file...\n\n")
-    modify_config(config_path, folder_path, success_output_path)
+    modify_config(mdc_config_path, folder_path, success_output_path)
     print("Finished\n\n")
 
     """ Run MDC """
