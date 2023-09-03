@@ -38,12 +38,16 @@ Thanks to [@yoshiko2](https://github.com/yoshiko2) for the amazing thought and p
 
 There are few parameters need to fill:
 
-| Parameter             | Required | Description                                                  |
-| --------------------- | -------- | ------------------------------------------------------------ |
-| -s (\-\-source)       | True     | indicate your folder path consisting your movies need to be organized |
-| -dp (\-\-destination) | True     | indicate your folder path that your movies will be organized to |
-| -m (\-\-mdc)          | True     | indicate your folder path consisting your mdc program and the config.ini |
-| -d (\-\-dryrun)       | False    | show the filename modification result without process it     |
+| Parameter            | Required | Description                                                  |
+|----------------------| -------- | ------------------------------------------------------------ |
+| -s (\-\-source)      | True     | Indicate your folder path consisting your movies need to be organized |
+| -dp (\-\-destination) | True     | Indicate your folder path that your movies will be organized to |
+| -m (\-\-mdc)         | True     | Indicate your folder path consisting your mdc program and the config.ini |
+| -d (\-\-dryrun)      | False    | Show the filename modification result without process it    |
+| -c (\-\-sub)         | Four of one | Scrape all movies default with subtitle |
+| -no (\-\-no_sub) | Four of one | Scrape all movies default with NO subtitle |
+| -u (\-\-hack) | Four of one | Scrape all movies default with hacked |
+| -uc (\-\-hack_sub) | Four of one | Scrape all movies default with hacked AND subtitle |
 
 **Example**
 
