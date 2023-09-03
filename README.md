@@ -29,20 +29,52 @@ The program will do:
 
 ### 1. Download [Movie_Data_Capture](https://github.com/yoshiko2/Movie_Data_Capture) release
 
-Thanks to [@yoshiko2](https://github.com/yoshiko2) for the amazing thought and practise. 
+Thanks to [@yoshiko2](https://github.com/yoshiko2) for the amazing thought and practice. 
 
 - Download MDC from the [release page]((https://github.com/yoshiko2/Movie_Data_Capture/releases)) and rename the program to `mdc`
 - Edit the config.ini file to the way you like
+- Move the config.ini into your user .config folder
+
+```bash
+mv config.ini ~/.config/mdc/
+```
+
+- Or, create the soft link
+
+```bash
+mkdir ~/.config/mdc && ln -s config.ini ~/.config/mdc/
+```
 
 ### 2. Run the program
+
+Create a configuration file named `MAS_config.ini` and fill with the following template:
+
+> [general]
+> mdc = ./mdc
+>
+> [sub]
+> source = ~/source
+> dest = ~/dest
+>
+> [no_sub]
+> source = ~/source2
+> dest = ~/dest2
+>
+> [hack_sub]
+> source = ~/source3
+> dest = ~/dest3
+>
+> [hack]
+> source = ~/source4
+> dest = ~/dest4
 
 There are few parameters need to fill:
 
 | Parameter            | Required | Description                                                  |
 |----------------------| -------- | ------------------------------------------------------------ |
-| -s (\-\-source)      | True     | Indicate your folder path consisting your movies need to be organized |
-| -dp (\-\-destination) | True     | Indicate your folder path that your movies will be organized to |
-| -m (\-\-mdc)         | True     | Indicate your folder path consisting your mdc program and the config.ini |
+| -s (\-\-source)      | Discarded | Indicate your folder path consisting your movies need to be organized |
+| -dp (\-\-destination) | Discarded | Indicate your folder path that your movies will be organized to |
+| -m (\-\-mdc)         | Discarded | Indicate your folder path consisting your mdc program and the config.ini |
 | -d (\-\-dryrun)      | False    | Show the filename modification result without process it    |
 | -c (\-\-sub)         | Four of one | Scrape all movies default with subtitle |
 | -no (\-\-no_sub) | Four of one | Scrape all movies default with NO subtitle |
@@ -52,10 +84,10 @@ There are few parameters need to fill:
 **Example**
 
 ```bash
-python Movie_AutoScraping.py -c -s "/home/tedwu/download" -dp "/home/tedwu/movie" -m "/home/tedwu/program"
+python Movie_AutoScraping.py -c
 ```
 
 ```bash
-python Movie_AutoScraping.py -uc -s "/home/tedwu/download" -dp "/home/tedwu/movie" -m "/home/tedwu/program" -d
+python Movie_AutoScraping.py -uc -d
 ```
 
