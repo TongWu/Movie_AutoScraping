@@ -44,10 +44,10 @@ There are few parameters need to fill:
 **Example**
 
 ```bash
-python Movie_AutoScraping.py -s "/home/tedwu/download" -dp "/home/tedwu/movie" -m "/home/tedwu/program"
+python Movie_AutoScraping.py -c -s "/home/tedwu/download" -dp "/home/tedwu/movie" -m "/home/tedwu/program"
 ```
 
 ```bash
-python Movie_AutoScraping.py -s "/home/tedwu/download" -dp "/home/tedwu/movie" -m "/home/tedwu/program" -d
+python Movie_AutoScraping.py -uc -s "/home/tedwu/download" -dp "/home/tedwu/movie" -m "/home/tedwu/program" -d
 ```
 
