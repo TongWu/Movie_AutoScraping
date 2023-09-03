@@ -6,6 +6,7 @@ import datetime
 import argparse
 import subprocess
 import configparser
+from sh import Command
 
 
 def is_valid_file_size(file_path, size_limit):
@@ -273,9 +274,10 @@ if __name__ == "__main__":
 
     """ Run MDC """
     print("Run MDC\n\n")
-    time.sleep(2)
     try:
-        subprocess.run([mdc_path + 'mdc'], check=True)
+        # subprocess.run([mdc_path + 'mdc'], check=True)
+        cmd = Command(mdc_path + 'mdc')
+        cmd()
     except subprocess.CalledProcessError as e:
         print(f"Error while running mdc: {e}")
 
