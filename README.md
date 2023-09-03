@@ -5,11 +5,20 @@ This is a program that can helps to finish the work after you download the movie
 The program will do:
 
 1. Delete the file under 500Mb
-2. Tidy the movie filename (only -C postfix is supported, more on the way…)
+2. Tidy the movie filename (with/without subtitle, hacked with/without subtitle)
    - Delete the prefix, e.g., 232GANA-334-C.mp4 -> GANA-334-C.mp4
    - Delete [advertisement], e.g., [233.com]SSNI-334-C.mp4 -> SSNI-334-C.mp4
    - Add ‘-’, e.g., SSNI334C.mp4 -> SSNI-334-C.mp4
-   - Add "-C" if it is not exist, e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
+   - With subtitle (-c):
+     - Delete all characters after the number part
+     - Add "-C", e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
+   - Without subtitle:
+     - Delete all characters after the number part
+   - Hacked with subtitle (-uc):
+     - Match the pattern and change the tag to -hack-c
+   - Hacked without subtitle (-u):
+     - Delete all characters after -u but before .extension
+     - Change all -u tag to -hack tag
 3. Call the [Movie_Data_Capture](https://github.com/yoshiko2/Movie_Data_Capture) program to scrape the metadata and put them on the right place
 
 ## Quick start
