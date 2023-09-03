@@ -70,7 +70,7 @@ def main(dry_run=True, folder_path=""):
                     print(f"Deleted a file less than 500Mb: {file_name}")
                 continue
 
-            # 清理文件名
+            # Clean the filename
             # TODO: Output a txt file with the log
             cleaned_filename = clean_filename(file_name)
             if cleaned_filename != file_name:
@@ -91,31 +91,21 @@ import configparser
 
 
 def modify_config(c, f, o):
-    # 创建配置解析器
     config = configparser.ConfigParser()
 
-    # 读取config.ini文件
-    config.read(c+'config.ini')
-
-    # 如果folder_path的最后一个字符不是路径分隔符，则添加一个
+    # Read config.ini
+    config.read(c + 'config.ini')
     if not f.endswith('/'):
         f += '/'
-
-    # 根据folder_path设置failed_output_folder
     failed_output_folder = f + "fail"
 
-    # 修改source_folder值
     config['common']['source_folder'] = f
-
-    # 修改success_output_folder值
     config['common']['success_output_folder'] = o
-
-    # 修改failed_output_folder值
     config['common']['failed_output_folder'] = failed_output_folder
 
-    # 将修改后的内容写回config.ini文件
     with open('./config.ini', 'w') as configfile:
         config.write(configfile)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process video files.')
@@ -126,7 +116,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # 获取目录路径
+    # Fetch arguments
     folder_path = args.source
     success_output_path = args.destination
     mdc_path = args.mdc
@@ -134,17 +124,19 @@ if __name__ == "__main__":
         mdc_path += '/'
     config_path = mdc_path
 
-    # 检查输入的目录是否存在
+    # Check the path existing
     if not os.path.exists(folder_path):
         print("The path is not exist, exit.")
         sys.exit()
 
+    # Check dry run
     dry_run = args.dryrun
     if dry_run:
         print("DRY RUN, will not affect the file")
     else:
         print("The program will modify these files:")
 
+    # Whatever the dry run option, run dry run first
     main(True, folder_path)
 
     if not dry_run:
@@ -160,6 +152,6 @@ if __name__ == "__main__":
 
     """ Run MDC """
     try:
-        subprocess.run([mdc_path+'mdc'], check=True)
+        subprocess.run([mdc_path + 'mdc'], check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error while running mdc: {e}")
