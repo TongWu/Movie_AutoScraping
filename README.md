@@ -20,6 +20,10 @@ The program will do:
      - Delete all characters after -u but before .extension
      - Change all -u tag to -hack tag
 3. Call the [Movie_Data_Capture](https://github.com/yoshiko2/Movie_Data_Capture) program to scrape the metadata and put them on the right place
+4. Delete the duplicate file, low resolution in piority
+5. GUI for daemon keep-living and config editing (ongoing)
+6. Configuration validating and testing (ongoing)
+7. Watch modification of the specific folder, run the program periodically (ongoing)
 
 ## Quick start
 
