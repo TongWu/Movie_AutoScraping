@@ -168,8 +168,8 @@ def main(dry_run, folder_path, c, no, u, uc):
 def modify_config(c, f, o):
     mdc_config = configparser.ConfigParser()
 
-    # Read config.ini
-    mdc_config.read(c + 'config.ini', encoding='utf-8')
+    # Read MAS_config.ini
+    mdc_config.read(c + 'MAS_config.ini', encoding='utf-8')
     if not f.endswith('/'):
         f += '/'
     failed_output_folder = f + "failed"
@@ -178,7 +178,7 @@ def modify_config(c, f, o):
     mdc_config['common']['success_output_folder'] = o
     mdc_config['common']['failed_output_folder'] = failed_output_folder
 
-    with open(c + 'config.ini', 'w', encoding='utf-8') as config_file:
+    with open(c + 'MAS_config.ini', 'w', encoding='utf-8') as config_file:
         mdc_config.write(config_file)
 
 
@@ -201,7 +201,7 @@ if __name__ == "__main__":
         print("Error: You must provide exactly one of the following options: -c, -no, -u, -uc")
         sys.exit()
 
-    # Load the configuration from config.ini
+    # Load the configuration from MAS_config.ini
     config = configparser.ConfigParser()
     config.read('MAS_config.ini', encoding='utf-8')
 
