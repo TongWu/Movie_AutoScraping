@@ -51,32 +51,33 @@ Create a configuration file named `MAS_config.ini` and fill with the following t
 
 ```ini
 [general]
-mdc = ./mdc
+mdc = ./mdc ; Your mdc program path
 
 [sub]
-source = ~/source
-dest = ~/dest
+source = ~/source ; Your source folder path for movie with subtitle
+dest = ~/dest	  ; Your dest folder path for organised movie with subtitle
 
 [no_sub]
-source = ~/source2
-dest = ~/dest2
+source = ~/source2 ; Your source folder path for movie with subtitle
+dest = ~/dest2	   ; Your dest folder path for organised movie with subtitle
 
 [hack_sub]
-source = ~/source3
-dest = ~/dest3
+source = ~/source3 ; Your source folder path for movie with subtitle
+dest = ~/dest3     ; Your dest folder path for organised movie with subtitle
 
 [hack]
-source = ~/source4
-dest = ~/dest4
+source = ~/source4 ; Your source folder path for movie with subtitle
+dest = ~/dest4     ; Your dest folder path for organised movie with subtitle
+
 ```
 
 There are few parameters need to fill:
 
 | Parameter            | Required | Description                                                  |
 |----------------------| -------- | ------------------------------------------------------------ |
-| -s (\-\-source)      | Discarded | Indicate your folder path consisting your movies need to be organized |
-| -dp (\-\-destination) | Discarded | Indicate your folder path that your movies will be organized to |
-| -m (\-\-mdc)         | Discarded | Indicate your folder path consisting your mdc program and the config.ini |
+| ~~-s (--source)~~ | ~~Discarded~~ | ~~Indicate your folder path consisting your movies need to be organized~~ |
+| ~~-dp (\-\-destination)~~ | ~~Discarded~~ | ~~Indicate your folder path that your movies will be organized to~~ |
+| ~~-m (\-\-mdc)~~     | ~~Discarded~~ | ~~Indicate your folder path consisting your mdc program and the config.ini~~ |
 | -d (\-\-dryrun)      | False    | Show the filename modification result without process it    |
 | -c (\-\-sub)         | Four of one | Scrape all movies default with subtitle |
 | -no (\-\-no_sub) | Four of one | Scrape all movies default with NO subtitle |
