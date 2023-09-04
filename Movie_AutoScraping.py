@@ -6,7 +6,6 @@ import datetime
 import argparse
 import subprocess
 import configparser
-from sh import Command
 
 
 def is_valid_file_size(file_path, size_limit):
@@ -77,7 +76,7 @@ def countdown(seconds):
     print()
 
 
-def main(dry_run, folder_path, c, no, u, uc):
+def filename_clean(dry_run, folder_path, c, no, u, uc):
     # 500Mb by default
     size_limit = 500 * 1024 * 1024
 
@@ -236,7 +235,7 @@ if __name__ == "__main__":
     """ Step 2: Dry run and log """
     # Whatever the dry run option, run dry run first
     print("Generate file report...\n\n")
-    main(True, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
+    filename_clean(True, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
 
     if dry_run:
         sys.exit()
@@ -246,7 +245,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("\nOperation interrupted by user, abort.")
             sys.exit()
-        main(False, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
+        filename_clean(False, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
 
     print("Finished\n\n")
 
