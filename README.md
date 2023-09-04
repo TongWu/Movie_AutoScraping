@@ -2,7 +2,7 @@
 
 This is a program that can helps to finish the work after you download the movie to the folder (including the cloud folder mounted by rclone).
 
-The program will do:
+The program will:
 
 1. Delete the file under 500Mb
 2. Tidy the movie filename (with/without subtitle, hacked with/without subtitle)
@@ -22,7 +22,7 @@ The program will do:
 3. Call the [Movie_Data_Capture](https://github.com/yoshiko2/Movie_Data_Capture) program to scrape the metadata and put them on the right place
 4. Delete the duplicate file, low resolution in piority
 5. GUI for daemon keep-living and config editing (ongoing)
-6. Configuration validating and testing (ongoing)
+6. Configuration validating and testing
 7. Watch modification of the specific folder, run the program periodically (ongoing)
 
 ## Quick start
@@ -31,7 +31,7 @@ The program will do:
 
 Thanks to [@yoshiko2](https://github.com/yoshiko2) for the amazing thought and practice. 
 
-- Download MDC from the [release page]((https://github.com/yoshiko2/Movie_Data_Capture/releases)) and rename the program to `mdc`
+- Download MDC from the [MDC's release page]((https://github.com/yoshiko2/Movie_Data_Capture/releases)) and rename the program to `mdc`
 - Edit the config.ini file to the way you like
 - Move the config.ini into your user .config folder
 
