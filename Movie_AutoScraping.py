@@ -22,6 +22,10 @@ def clean_filename(filename, c, no, u, uc):
     # Delete [], e.g., [233.com]SSNI-334-C.mp4 -> SSNI-334-C.mp4
     filename = re.sub(r"^\[.*?\]", "", filename)
 
+    # Capture the CD number if present, e.g., SSNI-888-CD2.mp4 -> CD2
+    cd_number_match = re.search(r"(cd\d+)", filename, re.IGNORECASE)
+    cd_number = cd_number_match.group(1) if cd_number_match else ''
+
     # Add "-", e.g., SSNI334C.mp4 -> SSNI-334-C.mp4
     if re.match(r"[A-Za-z]+\d+C\.", filename):
         filename = re.sub(r"([A-Za-z]+)(\d+)(C\.)", r"\1-\2-\3", filename)
@@ -32,6 +36,11 @@ def clean_filename(filename, c, no, u, uc):
 
     # Delete all characters after the number part
     filename = re.sub(r"(\d+)-?[^-.]+(?=\.[^.]+$)", r"\1", filename)
+
+    # Append the CD number if present
+    if cd_number:
+        filename_base, filename_extension = os.path.splitext(filename)
+        filename = f"{filename_base}-{cd_number}{filename_extension}"
 
     if c:
         # Add "-C" if it is not exist, e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
@@ -209,6 +218,9 @@ if __name__ == "__main__":
     if not os.path.exists(folder_path):
         print("The path is not exist, exit.")
         sys.exit()
+
+    if not folder_path.endswith('/'):
+        folder_path += '/'
 
     # Check dry run
     dry_run = args.dryrun
