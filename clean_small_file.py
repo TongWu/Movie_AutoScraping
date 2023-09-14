@@ -80,6 +80,32 @@ def filename_clean(dry_run, folder_path):
                 log_file.write(file_log + '\n')
         print("===================================================================================================")
 
+
+def move_files_to_root(folder_path):
+    """Move all files in the directory to its root."""
+    for dirpath, _, filenames in os.walk(folder_path):
+        for file_name in filenames:
+            current_file_path = os.path.join(dirpath, file_name)
+            dest_file_path = os.path.join(folder_path, file_name)
+
+            # Check if the file is already in root, continue if so
+            if current_file_path == dest_file_path:
+                continue
+
+            # Move the file
+            os.rename(current_file_path, dest_file_path)
+            print(f"Moved '{current_file_path}' to '{dest_file_path}'.")
+
+
+def remove_empty_dirs(folder_path):
+    """Remove all empty directories."""
+    for dirpath, dirnames, _ in os.walk(folder_path, topdown=False):  # topdown=False, so we check from deepest level
+        for dirname in dirnames:
+            dir_to_check = os.path.join(dirpath, dirname)
+            if not os.listdir(dir_to_check):  # Check if directory is empty
+                os.rmdir(dir_to_check)
+                print(f"Deleted empty directory '{dir_to_check}'.")
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process video files.')
     parser.add_argument('-d', '--dryrun', action='store_true', help='Enable dry run mode')
@@ -129,4 +155,9 @@ if __name__ == "__main__":
             print("\nOperation interrupted by user, abort.")
             sys.exit()
         filename_clean(False, folder_path)
+
+        print("\nMoving files to root directory...\n")
+        move_files_to_root(folder_path)
+        print("\nRemoving empty directories...\n")
+        remove_empty_dirs(folder_path)
     print("Finished")
