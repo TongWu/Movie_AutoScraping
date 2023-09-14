@@ -109,10 +109,27 @@ def remove_empty_dirs(folder_path):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process video files.')
     parser.add_argument('-d', '--dryrun', action='store_true', help='Enable dry run mode')
+    parser.add_argument('-c', '--sub', action='store_true', help='Scrape all movies default with subtitle')
+    parser.add_argument('-no', '--no_sub', action='store_true', help='Scrape all movies default with NO subtitle')
+    parser.add_argument('-u', '--hack', action='store_true', help='Scrape all movies default with hacked')
+    parser.add_argument('-uc', '--hack_sub', action='store_true', help='Scrape all movies default with hacked AND '
+                                                                       'subtitle')
+
     """ Step 1: Fetch arguments and initialise """
     print("Initialising...")
     args = parser.parse_args()
-    folder_path = "/home/tedwu/2016-2022/"
+    if sum([args.sub, args.no_sub, args.hack, args.hack_sub]) != 1:
+        print("Error: You must provide exactly one of the following options: -c, -no, -u, -uc")
+        sys.exit()
+
+    if args.sub:
+        folder_path = "/home/tedwu/2016-2022/有字幕"
+    elif args.no_sub:
+        folder_path = "/home/tedwu/2016-2022/no_cc"
+    elif args.hack:
+        folder_path = "/home/tedwu/2016-2022/无码破解/no_cc"
+    elif args.hack_sub:
+        folder_path = "/home/tedwu/2016-2022/无码破解/有字幕"
 
     # Check the path existing
     if not os.path.exists(folder_path):
