@@ -22,6 +22,10 @@ def clean_filename(filename, c, no, u, uc):
 
     # Delete [], e.g., [233.com]SSNI-334-C.mp4 -> SSNI-334-C.mp4
     filename = re.sub(r"^\[.*?\]", "", filename)
+    
+    # Capture the CD number if present, e.g., SSNI-888-CD2.mp4 -> CD2
+    cd_number_match = re.search(r"(cd\d+)", filename, re.IGNORECASE)
+    cd_number = cd_number_match.group(1) if cd_number_match else ''
 
     # Add "-", e.g., SSNI334C.mp4 -> SSNI-334-C.mp4
     if re.match(r"[A-Za-z]+\d+C\.", filename):
@@ -32,7 +36,12 @@ def clean_filename(filename, c, no, u, uc):
         filename = re.sub(r"([A-Za-z]+)(\d+)", r"\1-\2", filename)
 
     # Delete all characters after the number part
-    filename = re.sub(r"(\d+)-?[^-.]+(?=\.[^.]+$)", r"\1", filename)
+    filename = re.sub(r'(\d+).*?(?=\.[^.]+$)', r'\1', filename)
+    
+    # Append the CD number if present
+    if cd_number:
+        filename_base, filename_extension = os.path.splitext(filename)
+        filename = f"{filename_base}-{cd_number}{filename_extension}"
 
     if c:
         # Add "-C" if it is not exist, e.g., SSNI-334.mp4 -> SSNI-334-C.mp4
@@ -165,28 +174,11 @@ def main(dry_run, folder_path, c, no, u, uc):
         print("===================================================================================================")
 
 
-def modify_config(c, f, o):
-    mdc_config = configparser.ConfigParser()
-
-    # Read MAS_config.ini
-    mdc_config.read(c + 'MAS_config.ini', encoding='utf-8')
-    if not f.endswith('/'):
-        f += '/'
-    failed_output_folder = f + "failed"
-
-    mdc_config['common']['source_folder'] = f
-    mdc_config['common']['success_output_folder'] = o
-    mdc_config['common']['failed_output_folder'] = failed_output_folder
-
-    with open(c + 'MAS_config.ini', 'w', encoding='utf-8') as config_file:
-        mdc_config.write(config_file)
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process video files.')
-    #parser.add_argument('-s', '--source', type=str, required=True, help='Source folder path')
-    #parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
-    #parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
+    # parser.add_argument('-s', '--source', type=str, required=True, help='Source folder path')
+    # parser.add_argument('-dp', '--destination', type=str, required=True, help='Success output folder path')
+    # parser.add_argument('-m', '--mdc', type=str, required=True, help='MDC file path')
     parser.add_argument('-d', '--dryrun', action='store_true', help='Enable dry run mode')
     parser.add_argument('-c', '--sub', action='store_true', help='Scrape all movies default with subtitle')
     parser.add_argument('-no', '--no_sub', action='store_true', help='Scrape all movies default with NO subtitle')
@@ -205,7 +197,7 @@ if __name__ == "__main__":
     config = configparser.ConfigParser()
     config.read('MAS_config.ini', encoding='utf-8')
 
-    mdc_path = config['common']['mdc']
+    mdc_path = config['general']['mdc']
     if not mdc_path.endswith('/'):
         mdc_path += '/'
     mdc_config_path = mdc_path
@@ -227,6 +219,9 @@ if __name__ == "__main__":
     if not os.path.exists(folder_path):
         print("The path is not exist, exit.")
         sys.exit()
+        
+    if not folder_path.endswith('/'):
+        folder_path += '/'
 
     # Check dry run
     dry_run = args.dryrun
@@ -267,18 +262,13 @@ if __name__ == "__main__":
 
     print("Finished\n\n")
 
-    """ Step 3: Modify the MDC configuration file """
-    print("Modifying the MDC configuration file...\n\n")
-    modify_config(mdc_config_path, folder_path, success_output_path)
-    print("Finished\n\n")
-
     """ Run MDC """
     print("Run MDC\n\n")
     try:
-        # subprocess.run([mdc_path + 'mdc'], check=True)
-        cmd = Command(mdc_path + 'mdc')
-        cmd()
+        os.system(
+            f"{mdc_path}mdc -C 'common:source_folder={folder_path}' -C 'common:failed_output_folder={folder_path}failed' -C 'common:success_output_folder={success_output_path}' ")
     except subprocess.CalledProcessError as e:
         print(f"Error while running mdc: {e}")
 
     print("Finished")
+
