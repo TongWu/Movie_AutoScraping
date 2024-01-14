@@ -6,7 +6,6 @@ import datetime
 import argparse
 import subprocess
 import configparser
-from sh import Command
 
 
 def is_valid_file_size(file_path, size_limit):
@@ -27,6 +26,10 @@ def clean_filename(filename, c, no, u, uc):
     cd_number_match = re.search(r"(cd\d+)", filename, re.IGNORECASE)
     cd_number = cd_number_match.group(1) if cd_number_match else ''
 
+    # Capture the CD number if present, e.g., SSNI-888-CD2.mp4 -> CD2
+    cd_number_match = re.search(r"(cd\d+)", filename, re.IGNORECASE)
+    cd_number = cd_number_match.group(1) if cd_number_match else ''
+
     # Add "-", e.g., SSNI334C.mp4 -> SSNI-334-C.mp4
     if re.match(r"[A-Za-z]+\d+C\.", filename):
         filename = re.sub(r"([A-Za-z]+)(\d+)(C\.)", r"\1-\2-\3", filename)
@@ -38,6 +41,11 @@ def clean_filename(filename, c, no, u, uc):
     # Delete all characters after the number part
     filename = re.sub(r'(\d+).*?(?=\.[^.]+$)', r'\1', filename)
     
+    # Append the CD number if present
+    if cd_number:
+        filename_base, filename_extension = os.path.splitext(filename)
+        filename = f"{filename_base}-{cd_number}{filename_extension}"
+
     # Append the CD number if present
     if cd_number:
         filename_base, filename_extension = os.path.splitext(filename)
@@ -86,7 +94,7 @@ def countdown(seconds):
     print()
 
 
-def main(dry_run, folder_path, c, no, u, uc):
+def filename_clean(dry_run, folder_path, c, no, u, uc):
     # 500Mb by default
     size_limit = 500 * 1024 * 1024
 
@@ -223,6 +231,9 @@ if __name__ == "__main__":
     if not folder_path.endswith('/'):
         folder_path += '/'
 
+    if not folder_path.endswith('/'):
+        folder_path += '/'
+
     # Check dry run
     dry_run = args.dryrun
     if dry_run:
@@ -248,7 +259,7 @@ if __name__ == "__main__":
     """ Step 2: Dry run and log """
     # Whatever the dry run option, run dry run first
     print("Generate file report...\n\n")
-    main(True, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
+    filename_clean(True, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
 
     if dry_run:
         sys.exit()
@@ -258,7 +269,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("\nOperation interrupted by user, abort.")
             sys.exit()
-        main(False, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
+        filename_clean(False, folder_path, args.sub, args.no_sub, args.hack, args.hack_sub)
 
     print("Finished\n\n")
 
