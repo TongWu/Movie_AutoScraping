@@ -263,6 +263,7 @@ if __name__ == "__main__":
     print("Finished\n\n")
 
     """ Run MDC """
+    """
     print("Run MDC\n\n")
     try:
         os.system(
@@ -271,4 +272,5 @@ if __name__ == "__main__":
         print(f"Error while running mdc: {e}")
 
     print("Finished")
+    """
 
