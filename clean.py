@@ -123,13 +123,13 @@ if __name__ == "__main__":
         sys.exit()
 
     if args.sub:
-        folder_path = "/home/tedwu/2016-2022/有字幕"
+        folder_path = "/home/tedwu/2024/有字幕"
     elif args.no_sub:
-        folder_path = "/home/tedwu/2016-2022/no_cc"
+        folder_path = "/home/tedwu/2024/no_cc"
     elif args.hack:
-        folder_path = "/home/tedwu/2016-2022/无码破解/no_cc"
+        folder_path = "/home/tedwu/2024/无码破解/no_cc"
     elif args.hack_sub:
-        folder_path = "/home/tedwu/2016-2022/无码破解/有字幕"
+        folder_path = "/home/tedwu/2024/无码破解/有字幕"
 
     # Check the path existing
     if not os.path.exists(folder_path):
